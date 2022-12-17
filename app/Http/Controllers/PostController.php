@@ -54,32 +54,34 @@ class PostController extends Controller
             'user_id' => auth()->user()->id
         ]);
 
-        return redirect('/post')
+        return redirect('/posts')
             ->with('message', 'Your post has been added!');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  string  $slug
+     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($slug)
+    public function show($id)
     {
-        return view('posts.show')
-            ->with('post', Post::where('slug', $slug)->first());
+        $post = Post::find($id);
+        // dd($post);
+        return view('posts.show', compact('post'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  string  $slug
+     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($slug)
+    public function edit($id)
     {
-        return view('posts.edit')
-            ->with('post', Post::where('slug', $slug)->first());
+        $post = Post::find($id);
+
+        return view('posts.edit', compact('post'));
     }
 
     /**
@@ -89,18 +91,23 @@ class PostController extends Controller
      * @param  string  $slug
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $slug)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'title' => 'required',
             'description' => 'required',
+            'image' => 'required|mimes:jpg,png,jpeg|max:5048',
         ]);
 
-        Post::where('slug', $slug)
+        $newImageName = uniqid() . '-' . $request->title . '.' . $request->image->extension();
+        $request->image->move(public_path('images'), $newImageName);
+
+        Post::where('id', $id)
             ->update([
                 'title' => $request->input('title'),
                 'description' => $request->input('description'),
                 'slug' => SlugService::createSlug(Post::class, 'slug', $request->title),
+                'image_path' => $newImageName,
                 'user_id' => auth()->user()->id
             ]);
 
@@ -114,12 +121,12 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($slug)
+    public function destroy($id)
     {
-        $post = Post::where('slug', $slug);
+        $post = Post::where('id', $id);
         $post->delete();
 
-        return redirect('/post')
+        return redirect('/posts')
             ->with('message', 'Your post has been deleted!');
     }
 }

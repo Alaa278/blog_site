@@ -19,7 +19,7 @@
 
     @if (Auth::check())
         <div class="py-3 m-auto text-center">
-            <a href="/post/create" class="btn btn-info">
+            <a href="{{ route('posts.create') }}"  class="btn btn-info">
                 Create post
             </a>
         </div>
@@ -37,21 +37,21 @@
                         <p class="card-text"> By <span class="font-bold">{{ $post->user->name }}</span>, Created on
                             {{ date('jS M Y', strtotime($post->updated_at)) }}.</p>
                         <p class="card-text"> {{ $post->description }}</p>
-                        <a href="/post/{{ $post->slug }}" class="btn btn-primary  rounded-2">
+                        <a href="{{ route('posts.show', $post->id) }}" class="btn btn-primary  rounded-2">
                             Keep Reading
                         </a>
     
                         @if (isset(Auth::user()->id) && Auth::user()->id == $post->user_id)
                             <div class=" mt-3">
                                  <span class="m-2">
-                                    <a href="/post/{{ $post->slug }}/edit"
+                                    <a href="/posts/{{ $post->slug }}/edit"
                                         class="btn btn-info text-white">
                                         Edit
                                     </a>
                                 </span>
     
                                 <span class="float-start ">
-                                    <form action="/post/{{ $post->slug }}" method="POST">
+                                    <form action="/posts/{{ $post->id }}" method="POST">
                                         @csrf
                                         @method('delete')
     

@@ -10,7 +10,7 @@
     </div>
 
     <div class="w-75 m-auto">
-        <form action="/post" method="POST" enctype="multipart/form-data">
+        <form action="/posts" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="mb-3">
                 <input type="text" name="title" placeholder="Title..." class="form-control">
