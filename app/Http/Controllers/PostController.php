@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use Illuminate\Http\Request;
 use Cviebrock\EloquentSluggable\Services\SlugService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -15,10 +16,18 @@ class PostController extends Controller
      */
     public function index()
     {
-        return view('posts.index')
-            ->with('posts', Post::orderBy('updated_at', 'DESC')->get());
+        // dd(Auth::user()->role_name);
+        if (Auth::user()->role_name == 'admin') {
+            $posts = Post::orderBy('updated_at', 'desc')->get();
+        } else {
+            $posts = Post::where('user_id', Auth::user()->id)->orderBy('updated_at', 'desc')->get();
+        }
+
+        // dd($posts);
+        return view('posts.index', compact('posts'));
+
     }
-      /**
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -39,7 +48,7 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'image' => 'required|mimes:jpg,png,jpeg|max:5048'
+            'image' => 'required|mimes:jpg,png,jpeg|max:5048',
         ]);
 
         $newImageName = uniqid() . '-' . $request->title . '.' . $request->image->extension();
@@ -51,7 +60,7 @@ class PostController extends Controller
             'description' => $request->input('description'),
             'slug' => SlugService::createSlug(Post::class, 'slug', $request->title),
             'image_path' => $newImageName,
-            'user_id' => auth()->user()->id
+            'user_id' => auth()->user()->id,
         ]);
 
         return redirect('/posts')
@@ -108,7 +117,7 @@ class PostController extends Controller
                 'description' => $request->input('description'),
                 'slug' => SlugService::createSlug(Post::class, 'slug', $request->title),
                 'image_path' => $newImageName,
-                'user_id' => auth()->user()->id
+                'user_id' => auth()->user()->id,
             ]);
 
         return redirect('/posts')

@@ -44,7 +44,7 @@
                         @if (isset(Auth::user()->id) && Auth::user()->id == $post->user_id)
                             <div class=" mt-3">
                                  <span class="m-2">
-                                    <a href="/posts/{{ $post->slug }}/edit"
+                                    <a href="/posts/{{ $post->id }}/edit"
                                         class="btn btn-info text-white">
                                         Edit
                                     </a>

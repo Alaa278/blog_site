@@ -38,7 +38,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary">
-                Submit Post
+                Create Post
             </button>
         </form>
     </div>
