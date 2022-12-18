@@ -12,18 +12,18 @@
     <div class="w-75 m-auto">
         <form action="/posts/{{ $post->id }}" method="POST" enctype="multipart/form-data">
             @csrf
-        @method('PUT')
+            @method('PUT')
             <div class="mb-3">
-                <input type="text" name="title" placeholder="Title..."   value="{{ $post->title }}" class="form-control">
+                <input type="text" name="title" placeholder="Title..." value="{{ $post->title }}" class="form-control">
                 @if ($errors->has('title'))
                     <div class="form-text text-danger">{{ $errors->first('title') }}..!</div>
                 @endif
             </div>
             <div class="mb-3">
-                <textarea name="description" placeholder="Description..."  class="form-control">{{ $post->description }}</textarea>
+                <textarea name="description" placeholder="Description..." class="form-control">{{ $post->description }}</textarea>
                 @if ($errors->has('description'))
-                <div class="form-text text-danger">{{ $errors->first('description') }}..!</div>
-            @endif
+                    <div class="form-text text-danger">{{ $errors->first('description') }}..!</div>
+                @endif
             </div>
 
             <div class=" mb-3">
@@ -31,11 +31,11 @@
                     <span class="">
                         Select a file
                     </span>
-                    <input type="file" name="image"  value="{{ $post->image }}" class="hidden">
+                    <input type="file" name="image" value="{{ $post->image }}" class="hidden">
                 </label>
                 @if ($errors->has('image'))
-                <div class="form-text text-danger">{{ $errors->first('image') }}..!</div>
-            @endif
+                    <div class="form-text text-danger">{{ $errors->first('image') }}..!</div>
+                @endif
             </div>
 
             <button type="submit" class="btn btn-primary">
