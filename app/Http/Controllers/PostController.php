@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
@@ -9,6 +10,10 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -77,7 +82,11 @@ class PostController extends Controller
     {
         $post = Post::find($id);
         // dd($post);
+        if ($post->created_by != Auth::user()->id && Auth::user()->role_name != 'admin') {
+            abort(code:403);
+        }
         return view('posts.show', compact('post'));
+
     }
 
     /**
@@ -89,7 +98,9 @@ class PostController extends Controller
     public function edit($id)
     {
         $post = Post::find($id);
-
+        if ($post->created_by != Auth::user()->id) {
+            abort(code:403);
+        }
         return view('posts.edit', compact('post'));
     }
 
@@ -132,7 +143,10 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        $post = Post::where('id', $id);
+        $post = Post::find($id);
+        if ($post->created_by != Auth::user()->id) {
+            abort(code:403);
+        }
         $post->delete();
 
         return redirect('/posts')

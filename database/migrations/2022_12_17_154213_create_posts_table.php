@@ -20,7 +20,9 @@ return new class extends Migration
             $table->longText('description');
             $table->string('image_path');
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('created_by');
+            $table->integer('updated_by');
             $table->timestamps();
         });
     }

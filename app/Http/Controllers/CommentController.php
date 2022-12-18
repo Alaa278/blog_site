@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
        // Save Comment
        function save_comment(Request $request,$id){
         $request->validate([
@@ -33,7 +38,11 @@ class CommentController extends Controller
     }
     public function destroy($id)
     {
-        $comment = Comment::where('id', $id);
+        $comment = Comment::find($id);
+        // dd($comment->created_by);
+        if ($comment->created_by != Auth::user()->id) {
+            abort(code:403);
+        }
         $comment->delete();
         return back()->with('message', 'Your comment has been deleted!');
     }
