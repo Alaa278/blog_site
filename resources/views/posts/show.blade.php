@@ -2,14 +2,19 @@
 
 @section('content')
 
+@if (session()->has('message'))
+<div class="text-center ">
+    <p class="w-50 my-2 m-auto bg-success rounded-2 py-2 text-white">
+        {{ session()->get('message') }}
+    </p>
+</div>
+@endif
 
 <div class=" w-75 m-auto">
     <div class="card">
-        <div class="card-header">
-            <h5> {{ $post->title }} </h5>
-        </div>
+        <img src="{{ asset('images/' . $post->image_path) }}" class="card-img-top" alt="...">
         <div class="card-body">
-
+            <h5 class="card-title">{{ $post->title }}</h5>
             <p class="card-title"> By {{ $post->user->name }}, Created on
                 {{ date('jS M Y', strtotime($post->updated_at)) }}.
             </p>
@@ -29,19 +34,12 @@
                 @if ($errors->has('comment'))
                 <div class="form-text text-danger">{{ $errors->first('comment') }}..!</div>
                 @endif
-                <input type="submit" class="btn btn-primary mt-2" />
+                <input type="submit" class="btn btn-primary mt-2" value="Send" />
             </form>
         </div>
     </div>
     @endif
    
-    @if (session()->has('message'))
-    <div class="text-center ">
-        <p class="w-50 my-2 m-auto bg-success rounded-2 py-2 text-white">
-            {{ session()->get('message') }}
-        </p>
-    </div>
-    @endif
     <!-- Fetch Comments -->
     <div class="card my-4">
         <h5 class="card-header">Comments <span class="badge text-bg-dark">{{ count($post->comments) }}</span></h5>
